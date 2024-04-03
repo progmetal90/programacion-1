@@ -1,3 +1,16 @@
+# other
+desktop.ini
+*.gdoc
+
+# specific to CodeBlocks IDE
+*.layout
+*.depend
+*.save-failed
+
+# generated directories
+bin/
+obj/
+
 # Prerequisites
 *.d
 
