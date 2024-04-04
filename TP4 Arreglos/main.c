@@ -8,21 +8,27 @@ int cargarArreglo(int arreglo[], int dim);
 int cargarArregloRandomEnteros(int arreglo[], int dim, int cantidadACargar);
 void mostrarArreglo(int arreglo[], int validos);
 void mostrarArregloCaracteres(char arreglo[], int validos);
+int sumarElementosEnteros(int arreglo[], int dim);
 void cargarArregloEnPila(int arreglo[], int dim, Pila *destino);
 int cargarArregloRandomReales(float arreglo[], int dim, int cantidadACargar);
 float sumarElementosReales(float arreglo[], int dim);
 int existeElemento(char caracter, char arreglo[], int dim);
-int InsertarCaracterEnArregloOrdenado(char caracter, char arreglo[], int dim, int validos);
-char MaximoCaracter(char arreglo[], int validos);
+int insertarCaracterEnArregloOrdenado(char caracter, char arreglo[], int dim, int validos);
+char maximoCaracter(char arreglo[], int validos);
 int arregloEsCapicua(char arreglo[], int validos);
 void invertirPosiciones(int arreglo[], int validos);
-void OrdenarPorSeleccion(int enteros[], int validos);
-void OrdenarPorInsercion(char caracteres[], int validos);
+void ordenarPorSeleccion(int enteros[], int validos);
+void ordenarPorInsercion(char caracteres[], int validos);
+int intercalarCaracteres(char arreglo1[], int validos1, char arreglo2[], int validos2, char intercalados[]);
+
+const int cantidadEjercicios = 14;
 
 const int dimensionEnteros = 10;
 const int dimensionReales = 100;
 const int dimensionCaracteres = 10;
-const int validosTexto = 13;
+const int dimensionCaracteres2 = 6;
+const int dimensionCaracteresIntercalados = 12;
+const int dimensionTexto = 13;
 
 int main()
 {
@@ -37,11 +43,21 @@ int main()
     float reales [dimensionReales];
     int validosReales;
 
-    char caracteresOrdenados [] = {'a', 'b', 'c', 'e', 'f', 'A', 'C', 0, 0, 0};
+    char caracteresOrdenados [] = {'A', 'C', 'a', 'b', 'c', 'e', 'f', 0, 0, 0};
     int validosCaracteres = 7;
+    char caracteresOrdenados2 [] = {'B', 'E', 'd', 'g', 'h', 0};
+    int validosCaracteres2 = 5;
+
+    char caracteresIntercalados [14];
+    int validosCaracteresIntercalados = 0;
 
     char texto [] = "Hola, mundo!";
+    int validosTexto = 12;
     char capicua [] = "neuquen";
+
+    int vector [] = {1, 5, 6, 7, 8};
+    int vectorValidos = 5;
+    int vectorSuma [vectorValidos];
 
     int existe = 0;
     int sumaEnteros = 0;
@@ -86,11 +102,11 @@ int main()
             break;
         case 7:
             mostrarArregloCaracteres(caracteresOrdenados, validosCaracteres);
-            validosCaracteres = InsertarCaracterEnArregloOrdenado('d', caracteresOrdenados, dimensionCaracteres, validosCaracteres);
+            validosCaracteres = insertarCaracterEnArregloOrdenado(' ', caracteresOrdenados, dimensionCaracteres, validosCaracteres);
             mostrarArregloCaracteres(caracteresOrdenados, validosCaracteres);
             break;
         case 8:
-            maximo = MaximoCaracter(texto, validosTexto);
+            maximo = maximoCaracter(texto, validosTexto);
             printf("El caracter mayor es %c.\n", maximo);
             break;
         case 9:
@@ -112,36 +128,68 @@ int main()
             // 11a
             validosEnteros = cargarArregloRandomEnteros(enteros, dimensionEnteros, 10);
             mostrarArreglo(enteros, validosEnteros);
-            OrdenarPorSeleccion(enteros, validosEnteros);
+            ordenarPorSeleccion(enteros, validosEnteros);
             mostrarArreglo(enteros, validosEnteros);
+            break;
         case 12:
             // 11b
             mostrarArregloCaracteres(texto, validosTexto);
-            OrdenarPorInsercion(texto, validosTexto);
+            ordenarPorInsercion(texto, validosTexto);
             mostrarArregloCaracteres(texto, validosTexto);
             break;
         case 13:
             // 12
+            validosCaracteresIntercalados = intercalarCaracteres(caracteresOrdenados, validosCaracteres, caracteresOrdenados2, validosCaracteres2, caracteresIntercalados);
+            mostrarArregloCaracteres(caracteresIntercalados, validosCaracteresIntercalados);
+            break;
+        case 14:
+            mostrarArreglo(vector, vectorValidos);
+            sumaVector(vector, vectorSuma, vectorValidos);
+            mostrarArreglo(vectorSuma, vectorValidos);
             break;
         }
 
     return 0;
 }
 
-void OrdenarPorInsercion(char caracteres[], int validos){
+void sumaVector(int vector[], int vectorSuma[], int validos){
+    for(int i = 0; i < validos; i++){
+        vectorSuma[i] = 0;
+        for(int j = 0; j <= i; j++){
+            vectorSuma[i] += vector[j];
+        }
+    }
+}
+
+int intercalarCaracteres(char arreglo1[], int validos1, char arreglo2[], int validos2, char intercalados[]){
+    int validosIntercalados = 0;
+
+    for(int i = 0; i < validos1; i++){
+        intercalados[i] = arreglo1[i];
+        validosIntercalados++;
+    }
+
+    for(int i = 0; i < validos2; i++){
+        validosIntercalados = insertarCaracterEnArregloOrdenado(arreglo2[i], intercalados, dimensionCaracteresIntercalados, validosIntercalados);
+    }
+
+    return validosIntercalados;
+}
+
+void ordenarPorInsercion(char caracteres[], int validos){
     char aux [validos];
     int auxValidos = 0;
 
     for(int i = 0; i < validos; i++){
-        auxValidos = InsertarCaracterEnArregloOrdenado(caracteres[i], aux, validos, auxValidos);
+        auxValidos = insertarCaracterEnArregloOrdenado(caracteres[i], aux, validos, auxValidos);
     }
 
-    for(int i = 0; i < validos; i++){
+    for(int i = 0; i < auxValidos; i++){
         caracteres[i] = aux[i];
     }
 }
 
-void OrdenarPorSeleccion(int enteros[], int validos){
+void ordenarPorSeleccion(int enteros[], int validos){
     int aux;
     int indiceMenor;
 
@@ -193,7 +241,7 @@ int arregloEsCapicua(char arreglo[], int validos){
     return esCapicua;
 }
 
-char MaximoCaracter(char arreglo[], int validos){
+char maximoCaracter(char arreglo[], int validos){
     // Asumir el primer elemento como máximo.
     char maximo = arreglo[0];
 
@@ -207,24 +255,40 @@ char MaximoCaracter(char arreglo[], int validos){
     return maximo;
 }
 
-int InsertarCaracterEnArregloOrdenado(char caracter, char arreglo[], int dim, int validos){
+int insertarCaracterEnArregloOrdenado(char caracter, char arreglo[], int dim, int validos){
     int fueEncontrado = 0;
     int indiceObjetivo = 0;
 
     if(dim == 0 || validos >= dim){
         // El arreglo no tiene espacio para agregar un elemento.
         // Hacer algo?
+        printf("ERROR! No hay espacio para agregar elemento!\n");
     }
     else if(validos == 0 && dim > 0){
         // El arreglo no tiene ningún elemento válido, insertar al inicio.
         arreglo[0] = caracter;
         validos = 1;
     }
+    else if(validos == 1){
+        // El arreglo tiene 1 elemento.
+        if(caracter <= arreglo[0]){
+            arreglo[1] = arreglo[0];
+            arreglo[0] = caracter;
+        }
+        else{
+            arreglo[1] = caracter;
+        }
+        validos = 2;
+    }
     else{
         // El arreglo tiene por lo menos 2 valores válidos y hay espacio para insertar.
         // Iterar a partir del segundo elemento y chequear el anterior para buscar dónde insertar el nuevo caracter.
         for(int i = 1; i < validos && fueEncontrado == 0; i++){
-            if(caracter >= arreglo[i - 1] && caracter <= arreglo[i]){
+            if(caracter < arreglo[i-1]){
+                indiceObjetivo = i - 1;
+                fueEncontrado = 1;
+            }
+            else if(caracter >= arreglo[i - 1] && caracter <= arreglo[i]){
                 indiceObjetivo = i;
                 fueEncontrado = 1;
             }
@@ -280,8 +344,8 @@ int cargarArregloRandomReales(float arreglo[], int dim, int cantidadACargar){
         maximo = cantidadACargar;
     }
 
-    for(i = 0; i < dim; i++){
-        arreglo[i] = (float)(rand()%10+1);
+    for(i = 0; i < maximo; i++){
+        arreglo[i] = (float)(rand()%10+1) + (float)(rand()%10+1)/10;
     }
 
     validos = i;
@@ -312,7 +376,7 @@ int menu(){
 
     do{
         scanf("%d", &opcion);
-    }while(opcion < 1 || opcion > 13);
+    }while(opcion < 1 || opcion > cantidadEjercicios);
 
     return opcion;
 }
