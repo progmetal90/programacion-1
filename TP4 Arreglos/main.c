@@ -102,7 +102,7 @@ int main()
             break;
         case 7:
             mostrarArregloCaracteres(caracteresOrdenados, validosCaracteres);
-            validosCaracteres = insertarCaracterEnArregloOrdenado(' ', caracteresOrdenados, dimensionCaracteres, validosCaracteres);
+            validosCaracteres = insertarCaracterEnArregloOrdenado('F', caracteresOrdenados, dimensionCaracteres, validosCaracteres);
             mostrarArregloCaracteres(caracteresOrdenados, validosCaracteres);
             break;
         case 8:
@@ -139,6 +139,8 @@ int main()
             break;
         case 13:
             // 12
+            mostrarArregloCaracteres(caracteresOrdenados, validosCaracteres);
+            mostrarArregloCaracteres(caracteresOrdenados2, validosCaracteres2);
             validosCaracteresIntercalados = intercalarCaracteres(caracteresOrdenados, validosCaracteres, caracteresOrdenados2, validosCaracteres2, caracteresIntercalados);
             mostrarArregloCaracteres(caracteresIntercalados, validosCaracteresIntercalados);
             break;
@@ -269,43 +271,20 @@ int insertarCaracterEnArregloOrdenado(char caracter, char arreglo[], int dim, in
         arreglo[0] = caracter;
         validos = 1;
     }
-    else if(validos == 1){
-        // El arreglo tiene 1 elemento.
-        if(caracter <= arreglo[0]){
-            arreglo[1] = arreglo[0];
-            arreglo[0] = caracter;
-        }
-        else{
-            arreglo[1] = caracter;
-        }
-        validos = 2;
-    }
     else{
-        // El arreglo tiene por lo menos 2 valores válidos y hay espacio para insertar.
-        // Iterar a partir del segundo elemento y chequear el anterior para buscar dónde insertar el nuevo caracter.
-        for(int i = 1; i < validos && fueEncontrado == 0; i++){
-            if(caracter < arreglo[i-1]){
-                indiceObjetivo = i - 1;
+        for(int i = validos - 1; i >= 0 && fueEncontrado == 0; i--){
+            if(caracter > arreglo[i]){
+                arreglo[i + 1] = caracter;
                 fueEncontrado = 1;
             }
-            else if(caracter >= arreglo[i - 1] && caracter <= arreglo[i]){
-                indiceObjetivo = i;
-                fueEncontrado = 1;
+            else{
+                arreglo[i+1] = arreglo[i];
             }
         }
 
         if(fueEncontrado == 0){
-            // El caracter a insertar es mayor que cualquiera de los valores
-            arreglo[validos] = caracter;
-        }
-        else{
-            // Desplazar elementos un lugar hacia la derecha.
-            for(int i = validos; i >= indiceObjetivo; i--){
-                arreglo[i] = arreglo[i - 1];
-            }
-
-            // Insertar caracter.
-            arreglo[indiceObjetivo] = caracter;
+            // El caracter a insertar es menor que cualquiera de los valores
+            arreglo[0] = caracter;
         }
 
         validos++;
